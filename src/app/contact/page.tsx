@@ -1,7 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Phone, Mail, MapPin, Clock, ArrowRight, ExternalLink } from "lucide-react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Phone, Mail, MapPin, Clock, ArrowRight, ExternalLink, CheckCircle2 } from "lucide-react";
 import SectionHeading from "@/components/ui/SectionHeading";
 
 const GOOGLE_MAPS_QUERY = "2+Rover+Road,+Rustivia+Ext+3,+Elandsfontein,+1601,+South+Africa";
@@ -47,7 +48,43 @@ const staggerItem = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
 };
 
+interface FormErrors {
+  name?: string;
+  email?: string;
+  message?: string;
+}
+
 export default function ContactPage() {
+  const [submitted, setSubmitted] = useState(false);
+  const [errors, setErrors] = useState<FormErrors>({});
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    const newErrors: FormErrors = {};
+
+    const name = (data.get("name") as string)?.trim();
+    const email = (data.get("email") as string)?.trim();
+    const message = (data.get("message") as string)?.trim();
+
+    if (!name) newErrors.name = "Name is required";
+    if (!email) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = "Please enter a valid email";
+    }
+    if (!message) newErrors.message = "Message is required";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
+    setSubmitted(true);
+  };
+
   return (
     <>
       {/* Page Header */}
@@ -104,7 +141,7 @@ export default function ContactPage() {
                       href={detail.href}
                       target={detail.external ? "_blank" : undefined}
                       rel={detail.external ? "noopener noreferrer" : undefined}
-                      className="flex items-start gap-4 bg-white rounded-xl p-5 border border-neutral-100 shadow-sm hover:border-primary/20 hover:shadow-md transition-all duration-200"
+                      className="flex items-start gap-4 card-neu p-5"
                     >
                       <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
                         <detail.icon className="w-5 h-5 text-primary" />
@@ -124,7 +161,7 @@ export default function ContactPage() {
                       </div>
                     </a>
                   ) : (
-                    <div className="flex items-start gap-4 bg-white rounded-xl p-5 border border-neutral-100 shadow-sm">
+                    <div className="flex items-start gap-4 card-neu p-5">
                       <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
                         <detail.icon className="w-5 h-5 text-primary" />
                       </div>
@@ -152,152 +189,179 @@ export default function ContactPage() {
               transition={{ duration: 0.7, delay: 0.2 }}
               className="lg:col-span-3"
             >
-              <div className="bg-white rounded-xl border border-neutral-100 shadow-sm p-5 sm:p-6 md:p-8">
-                <h2 className="text-xl font-bold text-neutral-900 mb-6">
-                  Request a Quote
-                </h2>
-                <form className="space-y-5">
-                  <motion.div
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.3, duration: 0.4 }}
-                    className="grid grid-cols-1 sm:grid-cols-2 gap-5"
-                  >
-                    <div>
-                      <label
-                        htmlFor="name"
-                        className="block text-sm font-medium text-neutral-800 mb-1.5"
-                      >
-                        Full Name
-                      </label>
-                      <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        className="w-full px-4 py-2.5 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-                        placeholder="Your name"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="company"
-                        className="block text-sm font-medium text-neutral-800 mb-1.5"
-                      >
-                        Company
-                      </label>
-                      <input
-                        type="text"
-                        id="company"
-                        name="company"
-                        className="w-full px-4 py-2.5 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-                        placeholder="Company name"
-                      />
-                    </div>
-                  </motion.div>
-                  <motion.div
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.4, duration: 0.4 }}
-                    className="grid grid-cols-1 sm:grid-cols-2 gap-5"
-                  >
-                    <div>
-                      <label
-                        htmlFor="email"
-                        className="block text-sm font-medium text-neutral-800 mb-1.5"
-                      >
-                        Email
-                      </label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        className="w-full px-4 py-2.5 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-                        placeholder="your@email.com"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="phone"
-                        className="block text-sm font-medium text-neutral-800 mb-1.5"
-                      >
-                        Phone
-                      </label>
-                      <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        className="w-full px-4 py-2.5 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-                        placeholder="Your phone number"
-                      />
-                    </div>
-                  </motion.div>
-                  <motion.div
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.5, duration: 0.4 }}
-                  >
-                    <label
-                      htmlFor="service"
-                      className="block text-sm font-medium text-neutral-800 mb-1.5"
+              <div className="card-neu p-5 sm:p-6 md:p-8">
+                <AnimatePresence mode="wait">
+                  {submitted ? (
+                    <motion.div
+                      key="success"
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.5 }}
+                      className="text-center py-12"
                     >
-                      Service Required
-                    </label>
-                    <select
-                      id="service"
-                      name="service"
-                      className="w-full px-4 py-2.5 border border-neutral-200 rounded-lg text-sm text-neutral-600 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                      <div className="w-16 h-16 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <CheckCircle2 className="w-8 h-8 text-success" />
+                      </div>
+                      <h3 className="text-xl font-bold text-neutral-900 mb-2">
+                        Message Sent Successfully!
+                      </h3>
+                      <p className="text-neutral-600 mb-6">
+                        Thank you for contacting Eastern Hydraulics. Our team will
+                        get back to you within 24 hours.
+                      </p>
+                      <button
+                        onClick={() => setSubmitted(false)}
+                        className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-lg font-semibold text-sm hover:bg-primary-light btn-glow transition-all duration-200"
+                      >
+                        Send Another Message
+                      </button>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="form"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
                     >
-                      <option value="">Select a service</option>
-                      <option value="hydraulic-pumps">Hydraulic Pumps</option>
-                      <option value="hydraulic-motors">Hydraulic Motors</option>
-                      <option value="wheel-motors">Wheel Motors</option>
-                      <option value="hydraulic-cylinders">Hydraulic Cylinders</option>
-                      <option value="pneumatic-cylinders">Pneumatic & Air Cylinders</option>
-                      <option value="water-cylinders">Water Cylinders</option>
-                      <option value="power-packs">Hydraulic Power Packs</option>
-                      <option value="water-pumps">Water Pumps</option>
-                      <option value="design">Custom Design & Engineering</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </motion.div>
-                  <motion.div
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.6, duration: 0.4 }}
-                  >
-                    <label
-                      htmlFor="message"
-                      className="block text-sm font-medium text-neutral-800 mb-1.5"
-                    >
-                      Message
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      rows={5}
-                      className="w-full px-4 py-2.5 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
-                      placeholder="Describe your requirements..."
-                    />
-                  </motion.div>
-                  <motion.div
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.7, duration: 0.4 }}
-                  >
-                    <button
-                      type="submit"
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-primary text-white px-7 py-3 rounded-lg font-semibold text-sm hover:bg-primary-light btn-glow transition-all duration-200"
-                    >
-                      Send Message
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
-                  </motion.div>
-                </form>
+                      <h2 className="text-xl font-bold text-neutral-900 mb-6">
+                        Request a Quote
+                      </h2>
+                      <form onSubmit={handleSubmit} noValidate className="space-y-5">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                          <div>
+                            <label
+                              htmlFor="name"
+                              className="block text-sm font-medium text-neutral-800 mb-1.5"
+                            >
+                              Full Name <span className="text-danger">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              id="name"
+                              name="name"
+                              className={`w-full px-4 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors ${
+                                errors.name ? "border-danger" : "border-neutral-200"
+                              }`}
+                              placeholder="Your name"
+                              onChange={() => errors.name && setErrors((e) => ({ ...e, name: undefined }))}
+                            />
+                            {errors.name && (
+                              <p className="text-xs text-danger mt-1">{errors.name}</p>
+                            )}
+                          </div>
+                          <div>
+                            <label
+                              htmlFor="company"
+                              className="block text-sm font-medium text-neutral-800 mb-1.5"
+                            >
+                              Company
+                            </label>
+                            <input
+                              type="text"
+                              id="company"
+                              name="company"
+                              className="w-full px-4 py-2.5 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                              placeholder="Company name"
+                            />
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                          <div>
+                            <label
+                              htmlFor="email"
+                              className="block text-sm font-medium text-neutral-800 mb-1.5"
+                            >
+                              Email <span className="text-danger">*</span>
+                            </label>
+                            <input
+                              type="email"
+                              id="email"
+                              name="email"
+                              className={`w-full px-4 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors ${
+                                errors.email ? "border-danger" : "border-neutral-200"
+                              }`}
+                              placeholder="your@email.com"
+                              onChange={() => errors.email && setErrors((e) => ({ ...e, email: undefined }))}
+                            />
+                            {errors.email && (
+                              <p className="text-xs text-danger mt-1">{errors.email}</p>
+                            )}
+                          </div>
+                          <div>
+                            <label
+                              htmlFor="phone"
+                              className="block text-sm font-medium text-neutral-800 mb-1.5"
+                            >
+                              Phone
+                            </label>
+                            <input
+                              type="tel"
+                              id="phone"
+                              name="phone"
+                              className="w-full px-4 py-2.5 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                              placeholder="Your phone number"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label
+                            htmlFor="service"
+                            className="block text-sm font-medium text-neutral-800 mb-1.5"
+                          >
+                            Service Required
+                          </label>
+                          <select
+                            id="service"
+                            name="service"
+                            className="w-full px-4 py-2.5 border border-neutral-200 rounded-lg text-sm text-neutral-600 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                          >
+                            <option value="">Select a service</option>
+                            <option value="hydraulic-pumps">Hydraulic Pumps</option>
+                            <option value="hydraulic-motors">Hydraulic Motors</option>
+                            <option value="wheel-motors">Wheel Motors</option>
+                            <option value="hydraulic-cylinders">Hydraulic Cylinders</option>
+                            <option value="pneumatic-cylinders">Pneumatic & Air Cylinders</option>
+                            <option value="water-cylinders">Water Cylinders</option>
+                            <option value="power-packs">Hydraulic Power Packs</option>
+                            <option value="water-pumps">Water Pumps</option>
+                            <option value="design">Custom Design & Engineering</option>
+                            <option value="other">Other</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label
+                            htmlFor="message"
+                            className="block text-sm font-medium text-neutral-800 mb-1.5"
+                          >
+                            Message <span className="text-danger">*</span>
+                          </label>
+                          <textarea
+                            id="message"
+                            name="message"
+                            rows={5}
+                            className={`w-full px-4 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none ${
+                              errors.message ? "border-danger" : "border-neutral-200"
+                            }`}
+                            placeholder="Describe your requirements..."
+                            onChange={() => errors.message && setErrors((e) => ({ ...e, message: undefined }))}
+                          />
+                          {errors.message && (
+                            <p className="text-xs text-danger mt-1">{errors.message}</p>
+                          )}
+                        </div>
+                        <div>
+                          <button
+                            type="submit"
+                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-primary text-white px-7 py-3 rounded-lg font-semibold text-sm hover:bg-primary-light btn-glow transition-all duration-200"
+                          >
+                            Send Message
+                            <ArrowRight className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </form>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </motion.div>
           </div>

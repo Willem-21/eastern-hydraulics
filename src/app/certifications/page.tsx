@@ -122,7 +122,7 @@ export default function CertificationsPage() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="bg-primary/5 rounded-2xl border border-primary/10 p-6 sm:p-8 md:p-12 max-w-3xl mx-auto text-center"
+            className="card-neu p-6 sm:p-8 md:p-12 max-w-3xl mx-auto text-center"
           >
             <motion.div
               initial={{ scale: 0, rotate: -20 }}
@@ -176,10 +176,10 @@ export default function CertificationsPage() {
               <motion.div
                 key={cert.title}
                 variants={staggerItem}
-                className={`rounded-xl border p-6 shadow-sm hover:shadow-md transition-shadow duration-300 ${
+                className={`card-neu p-6 ${
                   cert.highlight
-                    ? "bg-white border-primary/20 ring-1 ring-primary/10"
-                    : "bg-white border-neutral-100"
+                    ? "ring-2 ring-primary/20"
+                    : ""
                 }`}
               >
                 <div className="flex items-start gap-4">

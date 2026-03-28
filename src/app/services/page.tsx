@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import {
   Cog,
@@ -187,21 +187,30 @@ const staggerItem = {
 };
 
 export default function ServicesPage() {
-  useEffect(() => {
+  const scrollToHash = useCallback(() => {
     const hash = window.location.hash.slice(1);
     if (hash) {
       setTimeout(() => {
         const el = document.getElementById(hash);
         if (el) {
-          el.scrollIntoView({ behavior: "smooth", block: "center" });
-          el.classList.add("ring-2", "ring-primary", "ring-offset-2");
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+          // Remove from any previous highlight first
+          el.classList.remove("card-neu-highlight");
+          void el.offsetWidth; // force reflow to restart animation
+          el.classList.add("card-neu-highlight");
           setTimeout(() => {
-            el.classList.remove("ring-2", "ring-primary", "ring-offset-2");
-          }, 2000);
+            el.classList.remove("card-neu-highlight");
+          }, 8500);
         }
       }, 300);
     }
   }, []);
+
+  useEffect(() => {
+    scrollToHash();
+    window.addEventListener("hashchange", scrollToHash);
+    return () => window.removeEventListener("hashchange", scrollToHash);
+  }, [scrollToHash]);
 
   return (
     <>
@@ -252,10 +261,10 @@ export default function ServicesPage() {
                 key={service.id}
                 id={service.id}
                 variants={staggerItem}
-                className="bg-white rounded-xl border border-neutral-100 p-6 shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-300"
+                className="card-neu p-6"
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
+                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center shrink-0 icon-bounce">
                     <service.icon className="w-6 h-6 text-primary" />
                   </div>
                   <div className="min-w-0">
@@ -348,7 +357,7 @@ export default function ServicesPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.5, duration: 0.5 }}
-                className="bg-white rounded-xl p-4 border border-neutral-100"
+                className="card-neu p-4"
               >
                 <p className="text-sm text-neutral-600">
                   <span className="font-semibold text-neutral-900">

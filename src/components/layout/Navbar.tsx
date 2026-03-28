@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect, useCallback } from "react";
 import { Menu, X, Phone } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -10,6 +11,7 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About Us" },
   { href: "/services", label: "Services" },
+  { href: "/portfolio", label: "Portfolio" },
   { href: "/certifications", label: "Certifications" },
   { href: "/contact", label: "Contact Us" },
 ];
@@ -62,23 +64,19 @@ export default function Navbar() {
           <Link
             href="/"
             onClick={(e) => handleNavClick(e, "/")}
-            className="flex items-center gap-3 shrink-0"
+            className="flex items-center gap-2 shrink-0 hover:opacity-90 active:scale-[0.97] transition-all duration-150"
           >
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center hover:scale-105 active:scale-95 transition-transform duration-150">
-              <span className="text-white font-extrabold text-lg">EH</span>
-            </div>
-            <div className="hidden sm:block">
-              <p className="text-neutral-900 font-bold text-lg leading-tight">
-                Eastern Hydraulics
-              </p>
-              <p
-                className={`text-neutral-600 text-xs tracking-wide transition-all duration-300 overflow-hidden ${
-                  scrolled ? "max-h-0 opacity-0" : "max-h-5 opacity-100"
-                }`}
-              >
-                Hydraulic Specialists Since 1989
-              </p>
-            </div>
+            <Image
+              src="/logo-eh.jpeg"
+              alt="Eastern Hydraulics Logo"
+              width={180}
+              height={48}
+              className={`transition-all duration-300 ${
+                scrolled ? "h-8 w-auto" : "h-10 w-auto"
+              }`}
+              style={{ clipPath: "inset(0 3% 0 0)" }}
+              priority
+            />
           </Link>
 
           {/* Desktop Nav */}
@@ -88,7 +86,7 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className={`relative px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                className={`relative px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
                   pathname === link.href
                     ? "text-primary"
                     : "text-neutral-800 hover:text-primary"

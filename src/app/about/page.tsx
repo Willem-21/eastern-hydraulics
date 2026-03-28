@@ -202,7 +202,7 @@ export default function AboutPage() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: i * 0.1 }}
-                  className="flex items-start gap-4 bg-white rounded-xl p-5 border border-neutral-100 shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-200"
+                  className="flex items-start gap-4 card-neu p-5"
                 >
                   <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
                     <item.icon className="w-5 h-5 text-primary" />
@@ -237,7 +237,7 @@ export default function AboutPage() {
               <motion.div
                 key={value.title}
                 variants={staggerItem}
-                className="bg-white rounded-xl border border-neutral-100 p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300"
+                className="card-neu p-6"
               >
                 <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mb-4">
                   <value.icon className="w-6 h-6 text-accent" />
@@ -273,7 +273,7 @@ export default function AboutPage() {
               <motion.div
                 key={member.name}
                 variants={staggerItem}
-                className="bg-white rounded-xl border border-neutral-100 p-4 sm:p-5 text-center shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300"
+                className="card-neu p-4 sm:p-5 text-center"
               >
                 <div className="w-14 h-14 sm:w-16 sm:h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
                   <Users className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
@@ -296,7 +296,7 @@ export default function AboutPage() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="bg-white rounded-2xl border border-neutral-100 p-6 sm:p-8 md:p-12 shadow-sm max-w-3xl mx-auto text-center"
+            className="card-neu p-6 sm:p-8 md:p-12 max-w-3xl mx-auto text-center"
           >
             <motion.div
               initial={{ scale: 0 }}

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Phone, Mail, MapPin } from "lucide-react";
 
 const footerServices = [
@@ -13,19 +14,20 @@ const footerServices = [
 
 export default function Footer() {
   return (
-    <footer className="bg-secondary text-white">
+    <footer className="bg-secondary text-white relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Company Info */}
           <div>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-white font-extrabold text-lg">EH</span>
-              </div>
-              <div>
-                <p className="font-bold text-lg leading-tight">Eastern Hydraulics</p>
-                <p className="text-white/60 text-xs">Hydraulic Specialists Since 1989</p>
-              </div>
+            <div className="mb-4 bg-white rounded-lg inline-block px-3 py-2">
+              <Image
+                src="/logo-eh.jpeg"
+                alt="Eastern Hydraulics Logo"
+                width={200}
+                height={53}
+                className="h-8 w-auto"
+                style={{ clipPath: "inset(0 3% 0 0)" }}
+              />
             </div>
             <p className="text-white/70 text-sm leading-relaxed">
               B-BBEE listed (LS0577) with SABS ISO 9001 accreditation. Specializing in
@@ -40,6 +42,7 @@ export default function Footer() {
               {[
                 { href: "/about", label: "About Us" },
                 { href: "/services", label: "Services" },
+                { href: "/portfolio", label: "Portfolio" },
                 { href: "/certifications", label: "Certifications" },
                 { href: "/contact", label: "Contact Us" },
               ].map((link) => (
@@ -61,12 +64,12 @@ export default function Footer() {
             <ul className="space-y-2.5">
               {footerServices.map((service) => (
                 <li key={service.id}>
-                  <Link
+                  <a
                     href={`/services#${service.id}`}
                     className="text-white/70 text-sm hover:text-white transition-colors duration-200"
                   >
                     {service.label}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
